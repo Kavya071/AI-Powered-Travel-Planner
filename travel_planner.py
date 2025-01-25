@@ -1,8 +1,12 @@
 import streamlit as st
 import cohere
 
-# Cohere API Key
-co = cohere.Client('q8M6mFRz5O7Qe75H9tYfvRdXz3uNSWO8P8ybMrRl')
+# Fetch the API key from Streamlit secrets
+api_key = st.secrets["general"]["cohere_api_key"]
+
+# Initialize Cohere client
+co = cohere.Client(api_key)
+
 
 # Streamlit App
 st.title("AI-Powered Travel Planner")
