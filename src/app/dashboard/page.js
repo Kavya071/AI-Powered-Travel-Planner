@@ -38,12 +38,10 @@ export default function DashboardPage() {
         router.push('/login');
       } else {
         setUser(u);
-        const q = query(
-          collection(db, 'itineraries'),
-          where('userId', '==', u.uid)
-        );
+        // Refactored: listen to user-scoped itineraries subcollection
+        const userItinCol = collection(db, 'users', u.uid, 'itineraries');
         unsubSnap = onSnapshot(
-          q,
+          userItinCol,
           snap => {
             setItineraries(snap.docs.map(d => ({ id: d.id, ...d.data() })));
             setLoading(false);
@@ -61,9 +59,11 @@ export default function DashboardPage() {
     };
   }, [db, router]);
 
+  // Refactored: delete from user-scoped itineraries subcollection
   const handleDelete = async id => {
     try {
-      await deleteDoc(doc(db, 'itineraries', id));
+      if (!user) throw new Error('Not authenticated');
+      await deleteDoc(doc(db, 'users', user.uid, 'itineraries', id));
     } catch (err) {
       console.error(err);
       alert('Delete failed.');

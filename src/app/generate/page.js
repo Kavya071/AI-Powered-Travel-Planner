@@ -105,7 +105,8 @@ Provide a detailed day-by-day plan broken into Morning, Afternoon, and Evening, 
     setSaveMessage('✅ Itinerary saved!');
     setTimeout(() => { setSaving(false); setSaveMessage(''); }, 3000);
 
-    addDoc(collection(db, 'itineraries'), {
+    // Refactored: save to user-scoped itineraries subcollection
+    addDoc(collection(db, 'users', user.uid, 'itineraries'), {
       userId:      user.uid,
       destination,
       days,

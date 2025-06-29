@@ -26,24 +26,27 @@ export default function ItineraryDetail() {
   const db     = getFirestore();
   const auth   = getAuth();
 
+  const [user, setUser] = useState(null);
   const [it, setIt]       = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Auth guard
+  // Auth guard and get user
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, u => {
       if (!u) router.push('/login');
+      else setUser(u);
     });
     return () => unsub();
   }, [auth, router]);
 
-  // Fetch itinerary
+  // Fetch itinerary from user-scoped subcollection
   useEffect(() => {
-    getDoc(doc(db, 'itineraries', id))
+    if (!user) return;
+    getDoc(doc(db, 'users', user.uid, 'itineraries', id))
       .then(snap => setIt(snap.exists() ? snap.data() : null))
       .catch(console.error)
       .finally(() => setLoading(false));
-  }, [db, id]);
+  }, [db, id, user]);
 
   if (loading) return <p className="p-8">Loading…</p>;
   if (!it)      return <p className="p-8">Itinerary not found.</p>;
