@@ -27,3 +27,6 @@ This web app allows users to generate personalized travel itineraries, save them
 
 ---
 
+## Live Demo
+
+Check out the deployed app here: [AI Powered Travel Planner](https://ai-powered-travel-planner-5qca38bdy-kavya-s-projects-103a59a9.vercel.app)
